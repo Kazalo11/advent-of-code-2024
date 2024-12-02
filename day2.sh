@@ -37,6 +37,8 @@ isSafe () {
 	done
 	return 1;
 }
+
+part1 () {
 count=0
 while IFS= read -r line; do
 read -r -a arr <<< "$line"
@@ -45,4 +47,7 @@ isSafe "${arr[@]}"
 done < day2.txt
 
 echo $count
+}
+
+part1
 
