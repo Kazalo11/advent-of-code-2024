@@ -78,8 +78,11 @@ func part1() {
 
 func part2() {
 	info := getData()
+
 	re := regexp.MustCompile(`mul\(\d+,\d+\)|don't\(\)|do\(\)`)
+
 	matches := re.FindAllString(info, -1)
+
 	total := calculateTotal2(matches)
 	fmt.Printf("Total for part 2 is: %d \n", total)
 
