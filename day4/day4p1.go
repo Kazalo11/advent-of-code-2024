@@ -9,8 +9,6 @@ func nextLetter(index int, row int, column int, matrix [][]string, path []Coordi
 		return false
 	}
 
-	// fmt.Printf("Current path for %d, %d is %v \n", row, column, path)
-
 	currentLetter := matrix[row][column]
 
 	if currentLetter == "S" && index == len(xmas)-1 {
