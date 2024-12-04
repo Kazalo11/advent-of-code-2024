@@ -3,31 +3,20 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 	"regexp"
 	"strconv"
+
+	"github.com/Kazalo11/advent-of-code-2024/util"
 )
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
-func getData() string {
-	data, err := os.ReadFile("day3.txt")
-	check(err)
-	return string(data)
-}
 
 func multiplyNumbers(numbers []string) int {
 	if len(numbers) > 2 {
 		log.Fatalf("More than 2 numbers found: %v", numbers)
 	}
 	n1, err := strconv.Atoi(numbers[0])
-	check(err)
+	util.Check(err)
 	n2, err := strconv.Atoi(numbers[1])
-	check(err)
+	util.Check(err)
 	return n1 * n2
 }
 
@@ -67,7 +56,7 @@ func calculateTotal2(matches []string) int {
 }
 
 func part1() {
-	info := getData()
+	info := util.GetData("day3.txt")
 
 	re := regexp.MustCompile(`mul\(\d+,\d+\)`)
 
@@ -79,7 +68,7 @@ func part1() {
 }
 
 func part2() {
-	info := getData()
+	info := util.GetData("day3.txt")
 
 	re := regexp.MustCompile(`mul\(\d+,\d+\)|don't\(\)|do\(\)`)
 
