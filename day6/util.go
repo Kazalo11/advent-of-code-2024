@@ -1,67 +1,76 @@
 package main
 
-import (
-	"bufio"
-	"os"
-	"strings"
+import "sort"
 
-	"github.com/Kazalo11/advent-of-code-2024/util"
-)
+func NextObstacleUp(curr [2]int, obstacles [][2]int) ([2]int, bool) {
 
-type Matrix struct {
-	data [][]string
-}
+	sort.Slice(obstacles, func(i, j int) bool {
+		return obstacles[i][0] > obstacles[j][0]
+	})
 
-type Direction int
-
-const (
-	FORWARD Direction = iota
-	BACKWARD
-	LEFT
-	RIGHT
-)
-
-func NewMatrix(filePath string) *Matrix {
-	var matrix [][]string
-
-	file, err := os.Open(filePath)
-	util.Check(err)
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-		row := strings.Split(line, "")
-		matrix = append(matrix, row)
-	}
-
-	return &Matrix{data: matrix}
-}
-
-func (m *Matrix) FindObstacles() [][2]int {
-	obstacles := make([][2]int, 0)
-	for rIndex, row := range m.data {
-		for cIndex, _ := range row {
-			if m.IsObstacle(rIndex, cIndex) {
-				obstacles = append(obstacles, [2]int{rIndex, cIndex})
-			}
+	for _, item := range obstacles {
+		if item[1] == curr[1] && item[0] < curr[0] {
+			return item, false
 		}
 	}
-	return obstacles
+
+	return [2]int{-1, curr[1]}, true
+
 }
 
-func (m *Matrix) IsObstacle(row, col int) bool {
-	i := m.data[row][col]
-	return i == "#"
-}
+func NextObstacleDown(curr [2]int, obstacles [][2]int) ([2]int, bool) {
 
-func (m *Matrix) FindGuard() [2]int {
-	for rowIndex, row := range m.data {
-		for colIndex, i := range row {
-			if i == "^" {
-				return [2]int{rowIndex, colIndex}
-			}
+	sort.Slice(obstacles, func(i, j int) bool {
+		return obstacles[i][0] < obstacles[j][0]
+	})
+
+	for _, item := range obstacles {
+		if item[1] == curr[1] && item[0] > curr[0] {
+			return item, false
 		}
 	}
-	panic("No guard found")
+
+	return [2]int{130, curr[1]}, true
+
+}
+
+func NextObstacleLeft(curr [2]int, obstacles [][2]int) ([2]int, bool) {
+
+	sort.Slice(obstacles, func(i, j int) bool {
+		return obstacles[i][1] > obstacles[j][1]
+	})
+
+	for _, item := range obstacles {
+		if item[0] == curr[0] && item[1] < curr[1] {
+			return item, false
+		}
+	}
+
+	return [2]int{curr[0], -1}, true
+
+}
+
+func NextObstacleRight(curr [2]int, obstacles [][2]int) ([2]int, bool) {
+
+	sort.Slice(obstacles, func(i, j int) bool {
+		return obstacles[i][1] < obstacles[j][1]
+	})
+
+	for _, item := range obstacles {
+		if item[0] == curr[0] && item[1] > curr[1] {
+			return item, false
+		}
+	}
+
+	return [2]int{curr[0], 130}, true
+
+}
+
+func GetDistinctItems(results [][2]int) int {
+	ans := map[[2]int]bool{}
+	for _, item := range results {
+		ans[item] = true
+	}
+	return len(ans)
+
 }
