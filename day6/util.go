@@ -38,21 +38,16 @@ func NewMatrix(filePath string) *Matrix {
 	return &Matrix{data: matrix}
 }
 
-func (m *Matrix) GetRow(rowIndex int) []string {
-	if rowIndex < 0 || rowIndex >= len(m.data) {
-		return nil
-	}
-	return m.data[rowIndex]
-}
-
-func (m *Matrix) GetColumn(columnIndex int) []string {
-	column := []string{}
-	for _, row := range m.data {
-		if columnIndex >= 0 && columnIndex < len(row) {
-			column = append(column, row[columnIndex])
+func (m *Matrix) FindObstacles() [][2]int {
+	obstacles := make([][2]int, 0)
+	for rIndex, row := range m.data {
+		for cIndex, _ := range row {
+			if m.IsObstacle(rIndex, cIndex) {
+				obstacles = append(obstacles, [2]int{rIndex, cIndex})
+			}
 		}
 	}
-	return column
+	return obstacles
 }
 
 func (m *Matrix) IsObstacle(row, col int) bool {
@@ -68,4 +63,5 @@ func (m *Matrix) FindGuard() [2]int {
 			}
 		}
 	}
+	panic("No guard found")
 }
