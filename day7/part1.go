@@ -4,38 +4,45 @@ import (
 	"math"
 )
 
-func part1() float64 {
+func part1() int64 {
 	return getData()
-
 }
 
-func checkIfTestValue(total float64, numbers []float64) bool {
-	if len(numbers) < 2 {
-		return false
+func checkIfTestValue(total int64, numbers []int64) bool {
+	if len(numbers) == 1 {
+		return numbers[0] == total
 	}
 
 	return runningTotal(total, numbers, 1, numbers[0], "+") || runningTotal(total, numbers, 1, numbers[0], "*") || runningTotal(total, numbers, 1, numbers[0], "||")
-
 }
 
-func concatNumbers(n1 float64, n2 float64) float64 {
-	digits := int(math.Log10(n2)) + 1
-	sol := math.Pow(10, float64(digits))*n1 + n2
-	return sol
-
+func concatNumbers(n1 int64, n2 int64) int64 {
+	digits := 0
+	temp := n2
+	for temp > 0 {
+		temp /= 10
+		digits++
+	}
+	powerOf10 := int64(1)
+	for i := 0; i < digits; i++ {
+		powerOf10 *= 10
+	}
+	if n1 > math.MaxInt64/powerOf10 {
+		panic("int64 overflow in concatNumbers")
+	}
+	return n1*powerOf10 + n2
 }
 
-func runningTotal(total float64, numbers []float64, index int, curr float64, operator string) bool {
+func runningTotal(total int64, numbers []int64, index int, curr int64, operator string) bool {
 	switch operator {
 	case "*":
 		curr *= numbers[index]
 	case "+":
 		curr += numbers[index]
-
 	case "||":
 		curr = concatNumbers(curr, numbers[index])
 	}
-	if curr == total {
+	if curr == total && index == len(numbers)-1 {
 		return true
 	}
 	if curr > total {
@@ -45,5 +52,4 @@ func runningTotal(total float64, numbers []float64, index int, curr float64, ope
 		return false
 	}
 	return runningTotal(total, numbers, index+1, curr, "*") || runningTotal(total, numbers, index+1, curr, "+") || runningTotal(total, numbers, index+1, curr, "||")
-
 }
