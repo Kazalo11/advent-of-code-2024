@@ -84,39 +84,30 @@ func checkIfLoop(obstacles [][2]int, guardLocation [2]int) bool {
 			return false
 		}
 
-		if slices.Contains(oldLocations, guardLocation) {
-
-			fmt.Printf("Guard Location: %v \n", guardLocation)
-			if len(oldLocations) < 4 {
-				return false
-			}
-
-			var found int
-			for index, val := range oldLocations {
-				if val == guardLocation {
-					found = index
-				}
-			}
-			if found < 3 || found > len(oldLocations)-3 {
-				return false
-			}
-
-			fmt.Printf("Possible loop locations: %v \n", oldLocations[found-3:found+4])
-
-			for i := found; i < found+4; i++ {
-				locations := oldLocations[i-3 : i+1]
-				if checkIfRectangle(locations) {
+		if checkIfInLoop(oldLocations, guardLocation) {
+			for i := 0; i < len(oldLocations)-3; i++ {
+				if checkIfRectangle(oldLocations[i : i+4]) {
 					return true
 				}
 			}
 			return false
-
 		}
+
 		oldLocations = append(oldLocations, guardLocation)
 
 		direction = (direction + 1) % 4
 		iteration++
 	}
+}
+
+func checkIfInLoop(locations [][2]int, guardLocation [2]int) bool {
+	count := 0
+	for _, item := range locations {
+		if item == guardLocation {
+			count++
+		}
+	}
+	return count > 2
 }
 
 func checkIfRectangle(oldLocations [][2]int) bool {
