@@ -20,24 +20,29 @@ func part1() float64 {
 }
 
 func checkIfTestValue(total float64, numbers []float64) bool {
-	num_of_operators := len(numbers) - 1
-	operators := [][]string{}
-
-	generateCombinations(num_of_operators, []string{}, &operators)
-	expected := 1 << num_of_operators
-	if len(operators) != expected {
-		panic(fmt.Sprintf("Not enough operators. Generated %d, expected %d.\n", len(operators), expected))
+	if len(numbers) < 2 {
+		return false
 	}
 
-	for _, operator := range operators {
-		// fmt.Printf("Checking for operators: %v if they can be used with numbers %v to get total %d \n", operator, numbers, total)
-		if checkIfPossible(numbers, operator, total) {
-			fmt.Printf("Operators %v work for total %f \n", operator, total)
-			return true
-		}
+	return runningTotal(total, numbers, 0, numbers[0], "+") || runningTotal(total, numbers, 0, numbers[0], "*")
+
+}
+
+func runningTotal(total float64, numbers []float64, index int, curr float64, operator string) bool {
+	switch operator {
+	case "*":
+		curr *= numbers[index]
+	case "+":
+		curr += numbers[index]
 
 	}
-	return false
+	if curr == total {
+		return true
+	}
+	if index == len(numbers)-1 {
+		return false
+	}
+	return runningTotal(total, numbers, index+1, curr, "*") || runningTotal(total, numbers, index+1, curr, "+")
 
 }
 
