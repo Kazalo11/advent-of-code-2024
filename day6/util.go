@@ -66,11 +66,17 @@ func NextObstacleRight(curr [2]int, obstacles [][2]int) ([2]int, bool) {
 
 }
 
-func GetDistinctItems(results [][2]int) int {
+func GetDistinctItems(results [][2]int) [][2]int {
 	ans := map[[2]int]bool{}
 	for _, item := range results {
 		ans[item] = true
 	}
-	return len(ans)
+
+	sol := make([][2]int, 0)
+
+	for key, _ := range ans {
+		sol = append(sol, key)
+	}
+	return sol
 
 }

@@ -6,7 +6,7 @@ import (
 )
 
 func part2() int {
-	matrix := NewMatrix("day6/day6.txt")
+	matrix := NewMatrix("day6.txt")
 	obstacles := matrix.FindObstacles()
 	guardLocation := matrix.FindGuard()
 

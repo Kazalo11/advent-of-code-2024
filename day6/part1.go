@@ -2,9 +2,9 @@ package main
 
 import "fmt"
 
-func part1() int {
+func part1() [][2]int {
 	direction := UP
-	matrix := NewMatrix("day6/day6.txt")
+	matrix := NewMatrix("day6.txt")
 	guardLocation := matrix.FindGuard()
 	obstacles := matrix.FindObstacles()
 
