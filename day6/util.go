@@ -30,7 +30,7 @@ func NextObstacleDown(curr [2]int, obstacles [][2]int) ([2]int, bool) {
 		}
 	}
 
-	return [2]int{130, curr[1]}, true
+	return [2]int{10, curr[1]}, true
 
 }
 
@@ -62,7 +62,7 @@ func NextObstacleRight(curr [2]int, obstacles [][2]int) ([2]int, bool) {
 		}
 	}
 
-	return [2]int{curr[0], 130}, true
+	return [2]int{curr[0], 10}, true
 
 }
 

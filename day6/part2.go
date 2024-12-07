@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"slices"
 )
 
 func part2() int {
 	matrix := NewMatrix("day6/day6.txt")
-
 	obstacles := matrix.FindObstacles()
 	guardLocation := matrix.FindGuard()
 
@@ -17,19 +15,20 @@ func part2() int {
 	for i := 0; i < 130; i++ {
 		for j := 0; j < 130; j++ {
 			item := [2]int{i, j}
-			fmt.Printf("Checking if obstacle at %v works \n", item)
+			fmt.Printf("Checking with obstacle put at: %v \n", item)
+
 			if item != guardLocation && !slices.Contains(obstacles, item) {
-				obstacles2 := obstacles
+				obstacles2 := append([][2]int{}, obstacles...)
 				obstacles2 = append(obstacles2, item)
 				if checkIfLoop(obstacles2, guardLocation) {
-					fmt.Printf("Loop found if obstacle is put at row %d and col %d \n", i, j)
+					fmt.Printf("Loop found if obstacle is put at row %d and col %d \n", item[0], item[1])
 					count++
 				}
 			}
 		}
 	}
-	return count
 
+	return count
 }
 
 func checkIfLoop(obstacles [][2]int, guardLocation [2]int) bool {
@@ -40,6 +39,8 @@ func checkIfLoop(obstacles [][2]int, guardLocation [2]int) bool {
 
 	var obstacle [2]int
 	var escape bool
+
+	iteration := 0
 
 	for {
 		switch direction {
@@ -78,39 +79,50 @@ func checkIfLoop(obstacles [][2]int, guardLocation [2]int) bool {
 			}
 
 		}
-		fmt.Printf("Total old locations: %v \n", oldLocations)
-		fmt.Printf("New guard location: %v \n", guardLocation)
+
 		if escape {
 			return false
 		}
 
 		if slices.Contains(oldLocations, guardLocation) {
-			fmt.Printf("Found a possible loop %v \n", oldLocations)
+
+			fmt.Printf("Guard Location: %v \n", guardLocation)
 			if len(oldLocations) < 4 {
 				return false
 			}
-			first := oldLocations[len(oldLocations)-4]
-			second := oldLocations[len(oldLocations)-3]
-			third := oldLocations[len(oldLocations)-2]
-			fourth := oldLocations[len(oldLocations)-1]
 
-			return checkIfRectangle(first, second, third, fourth)
+			var found int
+			for index, val := range oldLocations {
+				if val == guardLocation {
+					found = index
+				}
+			}
+			if found < 3 || found > len(oldLocations)-3 {
+				return false
+			}
+
+			fmt.Printf("Possible loop locations: %v \n", oldLocations[found-3:found+4])
+
+			for i := found; i < found+4; i++ {
+				locations := oldLocations[i-3 : i+1]
+				if checkIfRectangle(locations) {
+					return true
+				}
+			}
+			return false
+
 		}
 		oldLocations = append(oldLocations, guardLocation)
 
 		direction = (direction + 1) % 4
+		iteration++
 	}
 }
 
-func checkIfRectangle(first, second, third, fourth [2]int) bool {
-	cx := float64(first[0]+second[0]+third[0]+fourth[0]) / 4.0
-	cy := float64(first[1]+second[1]+third[1]+fourth[1]) / 4.0
+func checkIfRectangle(oldLocations [][2]int) bool {
+	first := oldLocations[0]
+	last := oldLocations[3]
 
-	dd1 := math.Pow(cx-float64(first[0]), 2) + math.Pow(cy-float64(first[1]), 2)
-	dd2 := math.Pow(cx-float64(second[0]), 2) + math.Pow(cy-float64(second[1]), 2)
-	dd3 := math.Pow(cx-float64(third[0]), 2) + math.Pow(cy-float64(third[1]), 2)
-	dd4 := math.Pow(cx-float64(fourth[0]), 2) + math.Pow(cy-float64(fourth[1]), 2)
-
-	return dd1 == dd2 && dd1 == dd3 && dd1 == dd4
+	return first[0] == last[0] || first[1] == last[1]
 
 }
