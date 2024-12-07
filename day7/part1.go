@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
-func part1() int {
-	count := 0
+func part1() float64 {
+	count := 0.0
 	data := getData()
 	for total, numbers := range data {
-		fmt.Printf("Checking for total %d if numbers %v work \n", total, numbers)
 		if checkIfTestValue(total, numbers) {
 			count += total
+		} else {
+			fmt.Printf("No combination can be found for %v to equal %f \n", numbers, total)
 		}
 
 	}
@@ -19,18 +19,20 @@ func part1() int {
 
 }
 
-func checkIfTestValue(total int, numbers []int) bool {
+func checkIfTestValue(total float64, numbers []float64) bool {
 	num_of_operators := len(numbers) - 1
 	operators := [][]string{}
 
 	generateCombinations(num_of_operators, []string{}, &operators)
-	if len(operators) != int(math.Pow(2, (float64(num_of_operators)))) {
-		panic(fmt.Sprintf("Not enough operators, len of operators is %d when it should be %d \n", len(operators), int(math.Pow(2, (float64(num_of_operators))))))
+	expected := 1 << num_of_operators
+	if len(operators) != expected {
+		panic(fmt.Sprintf("Not enough operators. Generated %d, expected %d.\n", len(operators), expected))
 	}
 
 	for _, operator := range operators {
+		// fmt.Printf("Checking for operators: %v if they can be used with numbers %v to get total %d \n", operator, numbers, total)
 		if checkIfPossible(numbers, operator, total) {
-			fmt.Printf("Operators %v work for total %d \n", operator, total)
+			fmt.Printf("Operators %v work for total %f \n", operator, total)
 			return true
 		}
 
@@ -41,8 +43,7 @@ func checkIfTestValue(total int, numbers []int) bool {
 
 func generateCombinations(n int, combination []string, result *[][]string) {
 	if len(combination) == n {
-		combinationCopy := make([]string, len(combination))
-		copy(combinationCopy, combination)
+		combinationCopy := append([]string{}, combination...)
 		*result = append(*result, combinationCopy)
 		return
 	}
