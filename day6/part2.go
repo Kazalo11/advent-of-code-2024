@@ -85,12 +85,7 @@ func checkIfLoop(obstacles [][2]int, guardLocation [2]int) bool {
 		}
 
 		if checkIfInLoop(oldLocations, guardLocation) {
-			for i := 0; i < len(oldLocations)-3; i++ {
-				if checkIfRectangle(oldLocations[i : i+4]) {
-					return true
-				}
-			}
-			return false
+			return true
 		}
 
 		oldLocations = append(oldLocations, guardLocation)

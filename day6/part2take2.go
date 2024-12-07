@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func p2take2(path [][2]int) int {
+func part2take2(path [][2]int) int {
 	matrix := NewMatrix("day6.txt")
 	obstacles := matrix.FindObstacles()
 	guardLocation := matrix.FindGuard()

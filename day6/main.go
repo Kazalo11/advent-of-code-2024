@@ -9,6 +9,6 @@ func main() {
 	// ans2 := part2()
 	// fmt.Printf("Answer to part 2: %d \n", ans2)
 
-	ans2 := part2take2()
+	ans2 := part2take2(path)
 	fmt.Printf("Answer to part 2: %d \n", ans2)
 }
