@@ -4,7 +4,6 @@ import "fmt"
 
 func part2() int {
 	count := 0
-	ans := getData()
 	antinodes := make([][2]int, 0)
 
 	for _, antennas := range ans {

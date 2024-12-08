@@ -9,6 +9,7 @@ import (
 
 var height int
 var width int
+var ans map[string][][2]int
 
 func getData() map[string][][2]int {
 	antennas := make(map[string][][2]int, 0)
@@ -47,7 +48,7 @@ func getData() map[string][][2]int {
 
 func part1() int {
 	count := 0
-	ans := getData()
+	ans = getData()
 	antinodes := make([][2]int, 0)
 
 	for _, antennas := range ans {
