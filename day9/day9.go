@@ -22,8 +22,8 @@ func getData() string {
 	return line
 }
 
-func constructBlocks(line string) []rune {
-	var ans []rune
+func constructBlock(line string) []string {
+	var ans []string
 	id := 0
 	for index, charRune := range line {
 		char := string(charRune)
@@ -34,53 +34,60 @@ func constructBlocks(line string) []rune {
 		if index%2 == 0 {
 
 			for i := 0; i < num; i++ {
-				ans = append(ans, rune(id))
+				ans = append(ans, strconv.Itoa(id))
 			}
 
 			id++
 		} else {
 			for i := 0; i < num; i++ {
-				ans = append(ans, '.')
+				ans = append(ans, ".")
 			}
 		}
 
 	}
 
-	fmt.Println(len(ans))
 	return ans
 }
 
-func calculateCheckSum(block []rune) int {
+func calculateCheckSum(block []string) int {
 	ans := 0
 	p1 := 0
 	p2 := len(block) - 1
-	for p1 < p2 {
+	for p1 <= p2 {
 		char := block[p1]
-		if string(char) != "." {
-
-			ans += (int(char) * p1)
-		} else {
-			char2 := block[p2]
-			for string(char2) == "." {
+		if char == "." {
+			for block[p2] == "." {
 				p2--
-				char2 = block[p2]
+			}
+			if p1 <= p2 {
+
+				block[p1], block[p2] = block[p2], block[p1]
 			}
 
-			ans += (int(char2) * p1)
-			p2--
-
 		}
+		// fmt.Println(p1, p2)
+		// fmt.Println(block)
+
 		p1++
 
 	}
-	fmt.Println(p2)
+	for i, val := range block {
+		if val != "." {
+			num, err := strconv.Atoi(val)
+			if err != nil {
+				panic(fmt.Sprintf("Can't convert string %s to number", val))
+			}
+			ans += (num * i)
+		}
+	}
+
 	return ans
 }
 
 func part1() int {
 	line := getData()
 
-	block := constructBlocks(line)
+	block := constructBlock(line)
 
 	return calculateCheckSum(block)
 }
