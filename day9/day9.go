@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 
 	"github.com/Kazalo11/advent-of-code-2024/util"
@@ -90,4 +91,70 @@ func part1() int {
 	block := constructBlock(line)
 
 	return calculateCheckSum(block)
+}
+
+func calculateCheckSum2(block []string) int {
+	p2 := len(block) - 1
+
+	for p2 > 0 {
+		curr := block[p2]
+		if curr == "." {
+			p2--
+			continue
+		}
+		index := p2 - 1
+		for block[index] == curr {
+			index--
+			if index < 0 {
+				return calculateTotal(block)
+			}
+		}
+
+		length := p2 - index
+		numBlock := block[index+1 : index+length+1]
+		p1 := 0
+		dots := make([]string, length)
+		for i := range dots {
+			dots[i] = "."
+		}
+		for p1 < index {
+			if reflect.DeepEqual(block[p1:p1+length], dots) {
+				tmp := make([]string, length)
+				copy(tmp, numBlock)
+				copy(numBlock, block[p1:p1+length])
+				copy(block[p1:p1+length], tmp)
+				break
+			}
+			p1++
+		}
+		p2 = index
+
+	}
+
+	return calculateTotal(block)
+}
+
+func calculateTotal(block []string) int {
+	ans := 0
+	for idx, val := range block {
+		if val != "." {
+			num, err := strconv.Atoi(val)
+			if err != nil {
+				panic("Can't convert string to number")
+			}
+
+			ans += (num * idx)
+		}
+
+	}
+
+	return ans
+}
+
+func part2() int {
+	line := getData()
+
+	block := constructBlock(line)
+
+	return calculateCheckSum2(block)
 }

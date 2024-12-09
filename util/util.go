@@ -1,6 +1,8 @@
 package util
 
-import "os"
+import (
+	"os"
+)
 
 func Check(e error) {
 	if e != nil {
