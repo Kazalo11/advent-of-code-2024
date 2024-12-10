@@ -34,19 +34,23 @@ func getData() [][]int {
 	return grid
 }
 
-func countTrailheads(grid [][]int, row, col int, nextNum int) int {
+var trailheads = make(map[[2]int][][2]int)
+
+func countingTrailheads(grid [][]int, row, col, nextNum int, startPosition [2]int) bool {
 	if row < 0 || row >= len(grid[0]) || col < 0 || col >= len(grid) {
-		return 0
+		return false
 	}
+
 	curr := grid[row][col]
 	if curr != nextNum {
-		return 0
+		return false
 	}
-	if curr == 9 && nextNum == 9 {
-		return 1
-	}
-	return countTrailheads(grid, row+1, col, curr+1) + countTrailheads(grid, row, col+1, curr+1) + countTrailheads(grid, row, col-1, curr+1) + countTrailheads(grid, row-1, col, curr+1)
 
+	if curr == 9 && nextNum == 9 {
+		trailheads[startPosition] = append(trailheads[startPosition], [2]int{row, col})
+		return true
+	}
+	return countingTrailheads(grid, row+1, col, nextNum+1, startPosition) || countingTrailheads(grid, row-1, col, nextNum+1, startPosition) || countingTrailheads(grid, row, col-1, nextNum+1, startPosition) || countingTrailheads(grid, row, col+1, nextNum+1, startPosition)
 }
 
 func searchGrid(grid [][]int) int {
@@ -54,9 +58,11 @@ func searchGrid(grid [][]int) int {
 	for i, row := range grid {
 		for j, item := range row {
 			if item == 0 {
-				count += countTrailheads(grid, i, j, 0)
+				trailheads[[2]int{i, j}] = make([][2]int, 0)
+				countingTrailheads(grid, i, j, 0, [2]int{i, j})
 			}
 		}
 	}
+	fmt.Println(trailheads)
 	return count
 }
