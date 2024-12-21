@@ -24,6 +24,9 @@ symbol_keypad: Dict[str, List[Tuple[str, str]]] = {
     '>': [('v', '<'), ('A', '^')],
 }
 
+def shortest_paths(start: str, end: str, Dict[str, List[Tuple[str, str]]]) -> List[str]:
+    return
+
 
 
 def shortest_path(start: Tuple[str,str], end: str, grid:  Dict[str, List[Tuple[str, str]]]) -> List[str]:
